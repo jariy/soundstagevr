@@ -35,7 +35,7 @@ public class platformSetup : MonoBehaviour {
       manips[0].transform.parent.localPosition = Vector3.zero;
       manips[1].transform.parent.localPosition = Vector3.zero;
 
-      if (SteamVR.instance.hmd_TrackingSystemName == "oculus") oculusSwitch();
+      //if (SteamVR.instance.hmd_TrackingSystemName == "oculus") oculusSwitch();
     }
   }
 
