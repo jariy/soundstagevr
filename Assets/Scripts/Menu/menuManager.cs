@@ -206,7 +206,7 @@ public class menuManager : MonoBehaviour {
   public bool buttonEvent(int controller, Transform pad) {
     bool on = true;
 
-    if (controller != lastController) {
+    if (controller == lastController) {
       if (!simple) Activate(true, pad);
       else SimpleActivate(true, pad);
     } else {

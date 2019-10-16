@@ -31,7 +31,7 @@ public class menuspawn : MonoBehaviour {
 
   void Start() {
     glowRender = glowNode.GetComponent<Renderer>().material;
-    glowNode.SetActive(false);
+    glowNode.SetActive(true);
     menu = menuManager.instance;
   }
 
@@ -39,14 +39,15 @@ public class menuspawn : MonoBehaviour {
   public void togglePad() {
     bool on = menu.buttonEvent(controllerIndex, transform);
     if (toggleCoroutine != null) StopCoroutine(toggleCoroutine);
-    toggleCoroutine = StartCoroutine(toggleRoutine(on));
+    toggleCoroutine = StartCoroutine(toggleRoutine(true));
+
   }
 
   IEnumerator toggleRoutine(bool on) {
     glowNode.SetActive(true);
     Vector3 big = Vector3.one * 2.16f;
     Vector3 small = new Vector3(.01f, 2.16f, .01f);
-    float timer = 0;
+    float timer = -1;
 
     if (on) {
       glowNode.transform.localScale = small;
