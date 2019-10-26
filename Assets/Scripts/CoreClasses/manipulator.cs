@@ -528,7 +528,7 @@ public class manipulator : MonoBehaviour
 
         if (controllerVisible)
         {
-            Debug.Log("Controller is Visible");
+            //Debug.Log("Controller is Visible");
             if (secondaryDown)
             {
                 if (copyEnabled) SetCopy(true);

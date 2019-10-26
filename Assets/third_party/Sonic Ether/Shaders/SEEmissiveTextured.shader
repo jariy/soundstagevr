@@ -1,6 +1,3 @@
-// This is a placeholder script so that SoundStage runs without Sonic Ether Natural Bloom & Dirty Lens from the Unity Asset Store
-// You can purchase the asset here: http://u3d.as/7v5
-
 Shader "Sonic Ether/Emissive/Textured" {
 Properties {
 	_EmissionColor ("Emission Color", Color) = (1,1,1,1)
@@ -34,8 +31,13 @@ void surf (Input IN, inout SurfaceOutput o) {
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
 	fixed4 c = tex * _DiffuseColor;
 	o.Albedo = c.rgb;
+	fixed3 emissTex = tex2D(_Illum, IN.uv_Illum).rgb;
+	float emissL = max(max(emissTex.r, emissTex.g), emissTex.b);
+	fixed3 emissN = emissTex / (emissL + 0.0001);
+	emissL = pow(emissL, _EmissionTextureContrast);
+	emissTex = emissN * emissL;
 	
-	o.Emission = _EmissionColor * (exp(_EmissionGain * 10.0f));
+	o.Emission = _EmissionColor * emissTex * (exp(_EmissionGain * 10.0f));
 	o.Alpha = c.a;
 }
 ENDCG

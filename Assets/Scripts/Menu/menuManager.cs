@@ -74,7 +74,7 @@ public class menuManager : MonoBehaviour {
     active = on;
   }
 
-  int rowLength = 5;
+  int rowLength = 6;
 
   void loadMenu() {
     menuItems = new GameObject[(int)menuItem.deviceType.Max];
