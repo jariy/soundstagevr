@@ -64,7 +64,7 @@ public class timelineGridUI : MonoBehaviour {
     }
   }
 
-  public void spawnEvent(manipulator m, Vector2 gridpos) {
+  public void spawnEvent(manipulator m, Vector2 gridpos) { //This allows to put an sound events on the grid
     int track = (int)_interface._gridParams.YtoUnit(gridpos.y);
     Vector2 io = Vector2.zero;
     io.x = _interface._gridParams.XtoUnit(gridpos.x + _interface._gridParams.unitSize / (2f * _interface._gridParams.snapFraction));
@@ -73,20 +73,54 @@ public class timelineGridUI : MonoBehaviour {
     tl.stretchMode = true;
     m.ForceGrab(tl);
   }
+    public void spawnEvent(manipulator m, Vector2 gridpos,tape currt) //allows for direct entry from tape
+    { //This allows to put an sound events on the grid
+        int track = (int)_interface._gridParams.YtoUnit(gridpos.y);
+        Vector2 io = Vector2.zero;
+        io.x = _interface._gridParams.XtoUnit(gridpos.x + _interface._gridParams.unitSize / (2f * _interface._gridParams.snapFraction));
+        io.y = _interface._gridParams.XtoUnit(gridpos.x - _interface._gridParams.unitSize / (2f * _interface._gridParams.snapFraction));
+        timelineHandle tl = _interface.SpawnTimelineEvent(track, io,currt.filename,currt.label).GetComponentInChildren<timelineHandle>();
+        tl.stretchMode = true;
+        m.ForceGrab(tl);
+    }
 
-  void Update() {
+    void Update() {
     foreach (KeyValuePair<manipulator, GameObject> entry in activePreviews) {
-      if (entry.Key.isGrabbing() || multiselectTransform != null) {
-        entry.Value.SetActive(false);
-        entry.Key.toggleMultiselect(false, this);
-      } else if (entry.Key.emptyGrab) {
-        spawnEvent(entry.Key, _interface.worldPosToGridPos(entry.Key.transform.position));
-        killMultiselect();
-      } else {
-        entry.Value.SetActive(true);
-        entry.Key.toggleMultiselect(true, this);
-        entry.Value.transform.position = _interface.transform.TransformPoint(_interface.worldPosToGridPos(entry.Key.transform.position, true));
-      }
+            if (entry.Key.getSelection() == null)
+            {
+                if (entry.Key.isGrabbing() || multiselectTransform != null)
+                {
+                    entry.Value.SetActive(false);
+                    entry.Key.toggleMultiselect(false, this);
+                }
+                else if (entry.Key.emptyGrab )
+                {
+                    spawnEvent(entry.Key, _interface.worldPosToGridPos(entry.Key.transform.position));
+                    killMultiselect();
+                }
+
+                else
+                {
+                    entry.Value.SetActive(true);
+                    entry.Key.toggleMultiselect(true, this);
+                    entry.Value.transform.position = _interface.transform.TransformPoint(_interface.worldPosToGridPos(entry.Key.transform.position, true));
+                }
+            }
+            else
+            {
+                if (entry.Key.isGrabbing()) //REMEMBER TO HAVE A ERROR HANDLING
+                {
+                    //filename
+                    //label
+                    tape currenttape;
+                    currenttape= (tape)entry.Key.getSelection();
+                    spawnEvent(entry.Key, _interface.worldPosToGridPos(entry.Key.transform.position),currenttape);
+                    killMultiselect();
+                    //= tape.filename
+
+                }
+                
+            }
     }
 
     if (multiselectTransform != null) //multiselecting

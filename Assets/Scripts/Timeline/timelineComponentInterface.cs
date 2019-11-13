@@ -464,18 +464,24 @@ public class timelineComponentInterface : componentInterface {
     if (recording) _timelinePlayer.RecordEvent(track, on);
   }
 
-  public void tlEventTrigger(int index, bool play) {
+  public void tlEventTrigger(int index, bool play) { //this allows them to play 
     _tlEvents[index].playing = play;
     if (_targetDeviceInterface != null) _targetDeviceInterface.onTimelineEvent(_tlEvents[index].track, play);
   }
 
-  public timelineEvent SpawnTimelineEvent(int t, Vector2 io) {
+  public timelineEvent SpawnTimelineEvent(int t, Vector2 io) { //adds the sound to timeline event array
     _tlEvents.Add((Instantiate(tlEventPrefab, transform, false) as GameObject).GetComponent<timelineEvent>());
     _tlEvents.Last().init(t, io, this);
     return _tlEvents.Last();
   }
+    public timelineEvent SpawnTimelineEvent(int t, Vector2 io,string fn,string lb)
+    { //adds the sound to timeline event array
+        _tlEvents.Add((Instantiate(tlEventPrefab, transform, false) as GameObject).GetComponent<timelineEvent>());
+        _tlEvents.Last().init(t, io, this,fn,lb);
+        return _tlEvents.Last();
+    }
 
-  public void clearEvents() {
+    public void clearEvents() {
     for (int i = 0; i < _tlEvents.Count; i++) {
       Destroy(_tlEvents[i].gameObject);
     }

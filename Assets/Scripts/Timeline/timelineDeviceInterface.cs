@@ -84,7 +84,7 @@ public class timelineDeviceInterface : deviceInterface {
   private void OnAudioFilterRead(float[] buffer, int channels) {
     double dspTime = AudioSettings.dspTime;
     for (int i = 0; i < _trackInterfaces.Count; i++) {
-      if (!_trackInterfaces[i].isOutgoing()) _trackInterfaces[i].signal.processBuffer(buffer, dspTime, channels);
+      if (!_trackInterfaces[i].isOutgoing()) _trackInterfaces[i].signal.processBuffer(buffer, dspTime, channels); //DISABLED EMBEDDED SPEAKERS
     }
     SetArrayToSingleValue(buffer, buffer.Length, 0);
   }

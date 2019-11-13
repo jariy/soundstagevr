@@ -32,7 +32,7 @@ public class clipPlayer : signalGenerator {
 
   public GCHandle m_ClipHandle;
 
-  public void LoadSamples(float[] samples, GCHandle _cliphandle, int channels) {
+  public void  LoadSamples(float[] samples, GCHandle _cliphandle, int channels) {
 
     m_ClipHandle = _cliphandle;
     clipChannels = channels;

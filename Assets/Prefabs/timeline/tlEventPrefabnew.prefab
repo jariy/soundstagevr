@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 3679135871454004464}
   - component: {fileID: -6790100007242103297}
   m_Layer: 0
-  m_Name: tlEventPrefab
+  m_Name: tlEventPrefabnew
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,8 +330,7 @@ MonoBehaviour:
   filename: 
   sound: 0
   clipSamples: []
-  players:
-  - {fileID: 3679135871454004464}
+  players: []
   recording: 0
   snapping: 0
   playing: 0
@@ -368,8 +367,8 @@ MonoBehaviour:
   _sampleInterface: {fileID: -6790100007242103297}
   scrubTransform: {fileID: 0}
   scrubIndicators:
-  - {fileID: 1745876754596762}
-  - {fileID: 1420085384346762}
+  - {fileID: 0}
+  - {fileID: 0}
   speedGen: {fileID: 0}
   ampGen: {fileID: 0}
   seqGen: {fileID: 0}

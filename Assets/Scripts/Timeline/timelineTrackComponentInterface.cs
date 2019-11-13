@@ -15,7 +15,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//ABOUT TO BUTCHER THIS FILE 
 public class timelineTrackComponentInterface : componentInterface {
 
   public int ID = 0;
@@ -25,7 +25,8 @@ public class timelineTrackComponentInterface : componentInterface {
   public omniJack jackIn, sampleOut, pulseOut;
   public timelineTrackSignalGenerator signal;
   timelineDeviceInterface _deviceInterface;
-  public embeddedSpeaker embedSpeaker;
+  //public embeddedSpeaker embedSpeaker; //disabled embedSpeakers
+    // Include a Speaker Object
 
   public enum sigSource {
     button,
@@ -34,25 +35,32 @@ public class timelineTrackComponentInterface : componentInterface {
   };
 
   public struct trackComponent {
-    public int jackInID;
+    //public int jackInID;
     public int sampleOutID;
-    public int pulseOutID;
+    //public int pulseOutID;
     public string label;
     public string filename;
 
     public trackComponent(int idA, int idB, int idC, string l, string f) {
-      jackInID = idA;
+      //jackInID = idA;
       sampleOutID = idB;
-      pulseOutID = idC;
-      label = l;
-      filename = f;
+     // pulseOutID = idC;
+     label = l;
+     filename = f;
     }
-  };
+    public trackComponent(int idB,string l, string f) {
+     //jackInID = idA;
+     sampleOutID = idB;
+     // pulseOutID = idC;
+     label = l;
+     filename = f;
+     }
+    };
 
   public void Load(trackComponent t) {
-    jackIn.ID = t.jackInID;
+    //jackIn.ID = t.jackInID;
     sampleOut.ID = t.sampleOutID;
-    pulseOut.ID = t.pulseOutID;
+    //pulseOut.ID = t.pulseOutID;
     GetComponentInChildren<samplerLoad>().SetSample(t.label, t.filename);
   }
 
@@ -67,9 +75,9 @@ public class timelineTrackComponentInterface : componentInterface {
     string f = "";
     GetComponentInChildren<samplerLoad>().getTapeInfo(out l, out f);
     return new trackComponent(
-        jackIn.transform.GetInstanceID(),
+        //jackIn.transform.GetInstanceID(),
         sampleOut.transform.GetInstanceID(),
-        pulseOut.transform.GetInstanceID(),
+        //pulseOut.transform.GetInstanceID(),
         l, f);
   }
 
@@ -83,12 +91,13 @@ public class timelineTrackComponentInterface : componentInterface {
   public bool isOutgoing() {
     bool a = (sampleOut.near != null);
     bool b = (pulseOut.near != null);
-    bool c = embedSpeaker.activated;
+    //bool c = embedSpeaker.activated;
+    bool c = false; 
     return a || b || c;
   }
 
   bool[] sourceState = new bool[] { false, false, false };
-  public void updateSignal(bool on, sigSource source) {
+  public void updateSignal(bool on, sigSource source, float [] buffer) {
     sourceState[(int)source] = on;
     setSignal(sourceState[0] || sourceState[1] || sourceState[2], sourceState[0] || sourceState[1]);
   }

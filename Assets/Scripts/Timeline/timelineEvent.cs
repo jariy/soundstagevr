@@ -14,6 +14,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class timelineEvent : MonoBehaviour {
@@ -24,8 +26,16 @@ public class timelineEvent : MonoBehaviour {
   public Transform edgeIn, edgeOut;
   public xHandle edgeInHandle, edgeOutHandle;
   public timelineComponentInterface _componentInterface;
+  public string label;
+  public string filename;
+  public int sound;
 
-  public bool recording = false;
+    //Loading Sounds 
+    public float[] clipSamples;
+    GCHandle m_ClipHandle;
+    public clipPlayer[] players;
+
+    public bool recording = false;
   public bool snapping = false;
   public bool playing = false;
   public bool grabbed = false;
@@ -69,8 +79,15 @@ public class timelineEvent : MonoBehaviour {
   public void removeSelf() {
     if (playing) _componentInterface._targetDeviceInterface.onTimelineEvent(track, false);
     _componentInterface._tlEvents.Remove(this);
+        //Cleaning up
+        //if (1) fix thisss
+        {
+            m_ClipHandle.Free();
+            for (int i = 0; i < players.Length; i++) players[i].UnloadClip();
 
-  }
+        }
+
+    }
 
   public void overlapCheck() {
     _componentInterface.overlapCheck(this);
@@ -97,8 +114,65 @@ public class timelineEvent : MonoBehaviour {
     body.setHue(t);
     gridUpdate();
   }
+    public void init(int t, Vector2 io, timelineComponentInterface _dev,string fn,string lb)
+    {
+        snapping = _dev.snapping;
+        track = t;
+        in_out = io;
+        _componentInterface = _dev;
+        body.setHue(t);
+        gridUpdate();
+        filename = fn;
+        label = lb;
+        LoadClip(fn);
 
-  Vector2 preSnapIO = Vector2.zero;
+    }
+    public void LoadClip(string path)
+    {
+
+        string fullpath = sampleManager.instance.parseFilename(path);
+
+        if (!File.Exists(fullpath))
+        {
+            return;
+        }
+
+        if (_streamRoutine != null)
+        {
+            if (loaderObject != null) Destroy(loaderObject);
+            StopCoroutine(_streamRoutine);
+        }
+
+        _streamRoutine = StartCoroutine(streamRoutine(fullpath));
+    }
+
+    GameObject loaderObject;
+    Coroutine _streamRoutine;
+    IEnumerator streamRoutine(string fullpath)
+    {
+        AudioClip c = RuntimeAudioClipLoader.Manager.Load(fullpath, false, true, false);
+
+
+        while (RuntimeAudioClipLoader.Manager.GetAudioClipLoadState(c) != AudioDataLoadState.Loaded)
+        {
+            yield return null;
+        }
+        if (loaderObject != null) Destroy(loaderObject);
+
+
+        for (int i = 0; i < players.Length; i++) players[i].UnloadClip();
+
+        while (c.loadState != AudioDataLoadState.Loaded) yield return null;
+
+        clipSamples = new float[c.samples * c.channels];
+        c.GetData(clipSamples, 0);
+
+        //alocate the memory
+        m_ClipHandle = GCHandle.Alloc(clipSamples, GCHandleType.Pinned);
+        for (int i = 0; i < players.Length; i++) players[i].LoadSamples(clipSamples, m_ClipHandle, c.channels);
+    }
+
+    Vector2 preSnapIO = Vector2.zero;
   Vector2 postSnapIO = Vector2.zero;
   int preSnapTrack = -1;
   public void updateSnap(bool s) {

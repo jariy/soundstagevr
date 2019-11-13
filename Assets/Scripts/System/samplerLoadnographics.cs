@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-public class samplerLoad : MonoBehaviour {
+public class samplerLoadnographics : MonoBehaviour {
   public GameObject tapePrefab;
   public GameObject loadingPrefab;
   public Transform deckOutline;
