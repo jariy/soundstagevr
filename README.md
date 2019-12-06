@@ -1,4 +1,7 @@
-This project was forked from
+This project was forked from milenniummike/soundstagevr
+Updated work with SteamVR 1.8.21 and Unity 2019.2.0f1 
+
+
 
 # SoundStage VR
 
